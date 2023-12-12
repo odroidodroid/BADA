@@ -53,7 +53,6 @@ class Trainer:
     def test(self, loader: DataLoader) -> Tuple[Tensor, Tensor]:
         self.eval_mode()
         total_correct = total_loss = n_examples = 0
-
         for inputs, labels in loader:
             n_correct, loss = self.evaluate(inputs, labels, self.n_samples_test)  # [1,], [1,]
             total_correct += n_correct  # [1,]
@@ -166,7 +165,7 @@ class LogProbsTrainer(Trainer):
     ) -> Tuple[Tensor, Tensor]:
         logprobs = self.marginal_predict(inputs, n_model_samples)  # [N, Cl]
         n_correct = count_correct(logprobs, labels)  # [1,]
-        loss = nll_loss(logprobs, labels)  # [1,]
+        loss = nll_loss(logprobs.cuda(), labels.type(torch.LongTensor).cuda())  # [1,]
         return n_correct, loss
 
     def estimate_marginal_entropy_minibatch(self, inputs: Tensor) -> Tensor:

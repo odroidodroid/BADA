@@ -40,7 +40,6 @@ class Data:
     ) -> None:
         self.main_dataset = dataset(train=True)
         self.test_dataset = dataset(train=False)
-
         self.inds = Data.initialize_subset_indices(self.main_dataset.targets, label_counts, rng)
 
         if label_map != None:
@@ -78,7 +77,6 @@ class Data:
         """
         inds = {}
         free_inds = np.arange(len(labels))
-
         for subset, subset_label_counts in label_counts.items():
             subset_label_counts = Data.preprocess_label_counts(subset_label_counts, rng)
             inds[subset] = Data.select_inds_to_match_label_counts(

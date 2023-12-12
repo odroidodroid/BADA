@@ -11,12 +11,12 @@ defaults:
   - model: convolutional_nn
 
 acquisition:
-  batch_size: 1  # This only affects BADGE and random acquisition
+  batch_size: 5  # This only affects BADGE and random acquisition
   epig_probs_adjustment: null  # Optional adjustment to predictive distribution
   epig_probs_target: null  # Target class distribution
   epig_using_matmul: False  # Use efficient implementation using matrix multiplication
   n_target_samples: 100  # Number of sampled target inputs
-  objective: random  # Acquisition function
+  objective: epig  # Acquisition function
 
 cuda: False
 

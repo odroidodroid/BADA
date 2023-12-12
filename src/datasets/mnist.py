@@ -42,6 +42,7 @@ class ImageMNIST(MNIST, BaseDataset):
         self.data = self.data[:, None, :, :]  # [N, 1, 28, 28]
         self.targets = self.targets.numpy()  # [N,]
 
+
     def normalize(self, dataset: Dataset) -> None:
         data = dataset.data.numpy().astype(np.float32) / 255  # [N', 28, 28]
         self.mean = np.mean(data)  # [1,]

@@ -22,7 +22,6 @@ class BaseUCI(BaseDataset):
         verbose: bool = False,
     ) -> None:
         data, n_test = self.download()
-
         # Separate the inputs (all columns but the last) from the labels (last column).
         self.data = data[:, :-1]  # [N, F]
         self.targets = data[:, -1]  # [N,]

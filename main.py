@@ -40,11 +40,11 @@ def main(cfg: DictConfig) -> None:
         (results_dir / subdir).mkdir(parents=True, exist_ok=True)
 
     # ----------------------------------------------------------------------------------------------
-    logging.info("Saving repo status")
+    #logging.info("Saving repo status")
 
-    for filename, content in get_repo_status().items():
-        with open(results_dir / "git" / filename, mode="wb") as _file:
-            _file.write(content)
+    # for filename, content in get_repo_status().items():
+    #     with open(results_dir / "git" / filename, mode="wb") as _file:
+    #         _file.write(content)
 
     # ----------------------------------------------------------------------------------------------
     logging.info("Loading data")
@@ -57,8 +57,8 @@ def main(cfg: DictConfig) -> None:
         np.savetxt(results_dir / "data_indices" / f"{subset}.txt", inds, fmt="%d")
 
     logging.info(f"Number of classes: {data.n_classes}")
-
     # ----------------------------------------------------------------------------------------------
+
     logging.info("Starting active learning")
 
     test_log = Dictionary()
@@ -147,7 +147,7 @@ def main(cfg: DictConfig) -> None:
 
         with torch.inference_mode():
             test_acc, test_loss = trainer.test(data.get_loader("test"))
-
+        # the number of test image?
         test_log_update = {
             "n_labels": data.n_train_labels,
             "test_acc": test_acc.item(),
@@ -225,13 +225,16 @@ def main(cfg: DictConfig) -> None:
 
             scores = scores.numpy()
             scores = scores[cfg.acquisition.objective]
-
+            sorted_score = np.sort(scores)
             acquired_pool_inds = np.argmax(scores)
+            print("scores, mean : {} {}".format(sorted_score, np.mean(sorted_score)))
+            #acquired_pool_inds = np.argsort(scores)[::-1][:10]
 
         # ------------------------------------------------------------------------------------------
         logging.info(f"Acquiring with {cfg.acquisition.objective}")
-
         data.move_from_pool_to_train(acquired_pool_inds)
+        #for ind in acquired_pool_inds :
+        #    data.move_from_pool_to_train(ind)
 
         is_first_al_step = False
 
